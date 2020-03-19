@@ -1,10 +1,15 @@
-name: Test
+name: Gradle test
 
 on:
-  - push
+  push:
+    paths:
+      - 'gradle/**'
+  pull_request:
+    paths:
+      - 'gradle/**'
 
 jobs:
-  lint:
+  test:
     name: Gradle Wrapper Cache
     runs-on: ubuntu-latest
 

@@ -1,0 +1,32 @@
+name: Pushed release branches
+
+on:
+  push:
+    branches:
+      - 'release/**'
+  pull_request:
+    branches:
+      - 'release/**'
+
+jobs:
+  tasks:
+    name: Gradle Wrapper Cache
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Restore cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle
+          key: ${{ runner.os }}-gradle-${{ hashFiles('gradle/build.gradle.kts') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Download gradle wrapper
+        run: gradle/gradlew wrapper
+
+      - name: execute tasks
+        run: gradle/gradlew -b gradle/build.gradle.kts tasks
