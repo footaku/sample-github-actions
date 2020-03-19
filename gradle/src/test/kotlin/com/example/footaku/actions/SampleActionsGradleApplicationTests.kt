@@ -10,6 +10,7 @@ class SampleActionsGradleApplicationTests {
 	@Test
 	fun contextLoads() {
 		Assertions.assertTrue(true)
+		Assertions.assertTrue(true)
 	}
 
 }
