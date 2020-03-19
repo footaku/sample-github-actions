@@ -1,0 +1,18 @@
+name: Pushed release branches
+
+on:
+  release:
+    types: [created, edited, prereleased]
+
+jobs:
+  tasks:
+    name: Gradle Wrapper Cache
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Echo
+        run: echo "Pre-release"
+        shell: bash
