@@ -1,0 +1,37 @@
+name: create release
+
+# tag push
+on: 
+  push:
+    tags:
+      - ABC/ABC*
+
+jobs:
+  create-release:
+    name: Create new release with tag name
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: release name
+        run: |
+          RELEASE_NAME=$(echo ${{ github.ref }} | sed -e )
+          echo ::set-output name=release_name::${ RELEASE_NAME }
+          echo ${RELEASE_NAME}
+
+      # - name: Create Release
+      #   id: create_release
+      #   uses: actions/create-release@latest
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ github.ref }}
+      #     release_name: ${{ github.ref }}
+      #     body: |
+      #       Changes in this Release
+      #       - First Change
+      #       - Second Change
+      #     draft: false
+      #     prerelease: true
