@@ -1,0 +1,64 @@
+name: release-page
+
+on:
+  push:
+    tags:
+      - ABC/ABC*
+
+jobs:
+  create-release:
+    name: Create new release-page with tag name
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Register tag to env
+        id: tag
+        run: |
+          TAG_NAME=$(echo ${{ github.ref }} | sed -e 's|^refs/tags/||g')
+          echo "::set-output name=tag_name::${TAG_NAME}"
+          echo ${TAG_NAME}
+
+      - name: Register release to env
+        id: release
+        run: |
+          RELEASE_NAME=$(echo ${{ github.ref }} | sed -e 's|^refs/tags/ABC/||g')
+          echo "::set-output name=release_name::${RELEASE_NAME}"
+          echo ${RELEASE_NAME}
+
+      - name: Create or Update
+        id: create_or_update
+        run: |
+          STATUS=$(curl -s -LI "https://api.github.com/repos/footaku/sample-github-actions/releases/tags/${{ steps.tag.outputs.tag_name }}" -o /dev/null -w '%{http_code}')
+          echo "::set-output name=http_status::${STATUS}"
+          echo ${STATUS}
+
+      - name: Create release-page
+        uses: actions/create-release@latest
+        if: steps.create_or_update.outputs.http_status == '404'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ steps.release.outputs.release_name }}
+          body: |
+            Please edit description...
+          draft: false
+          prerelease: true
+
+      - name: Update release-page
+        if: steps.create_or_update.outputs.http_status == '200'
+        run: |
+          echo 'TODO update release-page.'
+        # uses: actions/create-release@latest
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # with:
+        #   tag_name: ${{ github.ref }}
+        #   release_name: ${{ steps.env.outputs.release_name }}
+        #   body: |
+        #     Please edit description...
+        #   draft: false
+        #   prerelease: true
