@@ -17,8 +17,8 @@ jobs:
 
       - name: release name
         run: |
-          RELEASE_NAME=$(echo ${{ github.ref }} | sed -e )
-          echo ::set-output name=release_name::${ RELEASE_NAME }
+          RELEASE_NAME=$(echo ${{ github.ref }} | sed -e 's|^refs/tags/ABC/||g')
+          echo "::set-output name=release_name::${RELEASE_NAME}"
           echo ${RELEASE_NAME}
 
       # - name: Create Release
