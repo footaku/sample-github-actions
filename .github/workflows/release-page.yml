@@ -30,14 +30,14 @@ jobs:
 
       - name: Create or Update
         id: create_or_update
+        env:
+          REPOSITORY_NAME: ${{ github.repository }}
+          TAG_NAME: ${{ steps.tag.outputs.tag_name }}
+          BEARER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-        STATUS=$(curl -s -LI "https://api.github.com/repos/footaku/sample-github-actions/releases/tags/ABC/ABC006" \
-        --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-        --header 'content-type: application/json' \
-        -o /dev/null \
-        -w '%{http_code}')
-        echo "::set-output name=http_status::${STATUS}"
-        echo ${STATUS}
+          STATUS=$(.github/scripts/get-tag.bash)
+          echo "::set-output name=http_status::${STATUS}"
+          echo ${STATUS}
 
       - name: Create release-page
         uses: actions/create-release@latest
