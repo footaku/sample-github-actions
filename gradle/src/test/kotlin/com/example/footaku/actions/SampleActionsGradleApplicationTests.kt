@@ -12,4 +12,9 @@ class SampleActionsGradleApplicationTests {
 		Assertions.assertTrue(true)
 	}
 
+	@Test
+	fun hoge() {
+		Assertions.assertTrue(true)
+	}
+
 }
