@@ -20,10 +20,7 @@ jobs:
           echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
 
       - name: Delete tag if exists
-        run: |
-          if [ $(git tag -l "${{ env.BRANCH_NAME }}") ]; then
-              git push --delete origin tags/${{ env.BRANCH_NAME }}
-          fi
+        run: git push --delete origin tags/${{ env.BRANCH_NAME }} > /dev/null 2>&1
 
       - name: Create tag
         run: |
@@ -31,11 +28,17 @@ jobs:
           git push origin tags/${{ env.BRANCH_NAME }}
 
       - name: Crete Release
-        uses: ncipollo/release-action@v1
+#        uses: ncipollo/release-action@v1
+#        with:
+#          tag: ${{ env.BRANCH_NAME }}
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#          allowUpdates: true
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag: ${{ env.BRANCH_NAME }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          allowUpdates: true
+          tag_name: ${{ env.BRANCH_NAME }}
+          release_name: ${{ env.BRANCH_NAME }}
 
       - name: echo
         run: echo "end"
