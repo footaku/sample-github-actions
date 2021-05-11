@@ -1,0 +1,27 @@
+name: Create GitHub release page
+
+on:
+  push:
+    branches:
+      - 'create-release-**'
+
+jobs:
+  create-release:
+    name: Create release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set env
+        run: |
+          BRANCH_NAME=${{ github.ref }}
+          echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
+
+      - name: Crete Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ env.BRANCH_NAME }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: true
