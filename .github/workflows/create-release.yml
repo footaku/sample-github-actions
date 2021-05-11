@@ -25,3 +25,6 @@ jobs:
           tag: ${{ env.BRANCH_NAME }}
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
+
+      - name: echo
+        run: echo "end"
