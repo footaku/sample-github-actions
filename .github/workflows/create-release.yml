@@ -18,6 +18,12 @@ jobs:
         run: |
           BRANCH_NAME=$(echo "${{ github.ref }}" | tr '/' ' ' | awk '{print $3}')
           echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
+          TAG_NAME=${BRANCH_NAME}
+          if [ $(git tag -l "${TAG_NAME}") ]; then
+              git push --delete origin tags/${TAG_NAME}
+          fi
+          git tag ${TAG_NAME}
+          git push origin ${TAG_NAME}
 
       - name: Crete Release
         uses: ncipollo/release-action@v1
