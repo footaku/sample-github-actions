@@ -28,17 +28,17 @@ jobs:
           git push origin tags/${{ env.BRANCH_NAME }}
 
       - name: Crete Release
-#        uses: ncipollo/release-action@v1
-#        with:
-#          tag: ${{ env.BRANCH_NAME }}
-#          token: ${{ secrets.GITHUB_TOKEN }}
-#          allowUpdates: true
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: ncipollo/release-action@v1
         with:
-          tag_name: ${{ env.BRANCH_NAME }}
-          release_name: ${{ env.BRANCH_NAME }}
+          tag: ${{ env.BRANCH_NAME }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: true
+#        uses: actions/create-release@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          tag_name: ${{ env.BRANCH_NAME }}
+#          release_name: ${{ env.BRANCH_NAME }}
 
       - name: echo
         run: echo "end"
