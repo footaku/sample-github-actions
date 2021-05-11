@@ -33,12 +33,6 @@ jobs:
           tag: ${{ env.BRANCH_NAME }}
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
-#        uses: actions/create-release@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          tag_name: ${{ env.BRANCH_NAME }}
-#          release_name: ${{ env.BRANCH_NAME }}
 
       - name: echo
         run: echo "end"
