@@ -20,7 +20,7 @@ jobs:
           echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
 
       - name: Delete tag if exists
-        run: git push --delete origin tags/${{ env.BRANCH_NAME }} > /dev/null 2>&1
+        run: git push --delete origin tags/${{ env.BRANCH_NAME }} > /dev/null 2>&1 || true
 
       - name: Create tag
         run: |
