@@ -16,7 +16,7 @@ jobs:
 
       - name: Set env
         run: |
-          BRANCH_NAME=${{ github.ref }}
+          BRANCH_NAME=$(echo "${{ github.ref }}" | tr '/' ' ' | awk '{print $3}')
           echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
 
       - name: Crete Release
