@@ -28,7 +28,7 @@ jobs:
       - name: Create tag
         run: |
           git tag ${{ env.BRANCH_NAME }}
-          git push origin ${{ env.BRANCH_NAME }}
+          git push origin tags/${{ env.BRANCH_NAME }}
 
       - name: Crete Release
         uses: ncipollo/release-action@v1
