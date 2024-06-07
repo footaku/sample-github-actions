@@ -1,0 +1,38 @@
+name: Docker build cache
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Docker build cache
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: sample/cache
+        tags: |
+          type=sha
+
+    - name: echo
+      run: |
+          echo "tags   = ${{ steps.meta.outputs.tags }}"
+          echo "labels = ${{ steps.meta.outputs.labels }}"
+
+    - name: Build and push
+      uses: docker/build-push-action@v5
+      with:
+        file: ./docker/build-cache/Dockerfile
+        push: false
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
