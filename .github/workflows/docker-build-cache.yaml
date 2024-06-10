@@ -19,8 +19,8 @@ jobs:
       uses: docker/metadata-action@v5
       with:
         images: sample/cache
-        tags: |
-          type=sha
+#        tags: |
+#          type=sha
 
     - name: echo
       run: |
@@ -32,7 +32,7 @@ jobs:
       with:
         file: ./docker/build-cache/Dockerfile
         push: false
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
+#        tags: ${{ steps.meta.outputs.tags }}
+#        labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
