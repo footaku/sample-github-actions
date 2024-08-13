@@ -19,8 +19,12 @@ jobs:
         run: |
           ENABLED_AUTO_MERGE=$(gh pr view ${{github.event.pull_request.number}} --json autoMergeRequest | jq ".autoMergeRequest != null")
           echo "enabled=${ENABLED_AUTO_MERGE}" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: execute tasks
         if: steps.auto-merge.outputs.enabled == 'false'
         run: |
           gh pr merge ${{github.event.pull_request.number}} --auto
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
