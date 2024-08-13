@@ -26,7 +26,7 @@ jobs:
       - name: execute tasks
         if: steps.auto-merge.outputs.enabled == 'false'
         run: |
-          curl -X PATCH \
+          curl -v -X PATCH \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             -d '{"auto_merge": true}' \
