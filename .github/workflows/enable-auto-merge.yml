@@ -1,0 +1,57 @@
+name: Enable Auto Merge
+
+on:
+  pull_request:
+    types:
+      - opened
+      - ready_for_review
+      - reopened
+
+jobs:
+  enable-auto-merge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: enabled auto merge?
+        id: auto-merge
+        run: |
+          ENABLED_AUTO_MERGE=$(gh pr view ${{github.event.pull_request.number}} --json autoMergeRequest | jq ".autoMergeRequest != null")
+          echo "enabled=${ENABLED_AUTO_MERGE}" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get Pull Request ID
+        id: pull-request
+        if: steps.auto-merge.outputs.enabled == 'false'
+        run: |
+          REPOSITORY_NAME=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}
+          PULL_REQUEST_ID=$(gh api graphql -f query="
+            query {
+              repository(owner: \"${{github.repository_owner}}\", name: \"${REPOSITORY_NAME}\") {
+                pullRequest(number: ${{ github.event.number }}) {
+                  id
+                }
+              }
+            }
+          " -q '.data.repository.pullRequest.id')
+          echo "id=${PULL_REQUEST_ID}" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enable Auto Merge
+        if: steps.auto-merge.outputs.enabled == 'false'
+        run: |
+          gh api graphql -f query="
+            mutation {
+              enablePullRequestAutoMerge(
+                input: { pullRequestId: \"${{steps.pull-request.outputs.id}}\" }
+              ) {
+                pullRequest { autoMergeRequest { enabledAt } }
+              }
+            }
+          "
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
