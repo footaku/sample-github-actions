@@ -4,6 +4,7 @@ on:
   pull_request:
     types:
       - opened
+      - ready_for_review
       - reopened
 
 jobs:
@@ -25,6 +26,8 @@ jobs:
       - name: execute tasks
         if: steps.auto-merge.outputs.enabled == 'false'
         run: |
-          gh pr merge ${{github.event.pull_request.number}} --auto
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          curl -X PATCH \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d '{"auto_merge": true}' \
+            https://api.github.com/repos/${{ github.repository }}/pulls/${{github.event.pull_request.number}}
