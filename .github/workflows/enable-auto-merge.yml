@@ -23,11 +23,35 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: execute tasks
+      - name: Get Pull Request ID
+        id: pull-request
         if: steps.auto-merge.outputs.enabled == 'false'
         run: |
-          curl -v -X PATCH \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            -d '{"auto_merge": true}' \
-            https://api.github.com/repos/${{ github.repository }}/pulls/${{github.event.pull_request.number}}
+          REPOSITORY_NAME=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}
+          PULL_REQUEST_ID=$(gh api graphql -f query="
+            query {
+              repository(owner: \"${{github.repository_owner}}\", name: \"${REPOSITORY_NAME}\") {
+                pullRequest(number: 2) {
+                  id
+                }
+              }
+            }
+          " -q '.data.repository.pullRequest.id')
+          echo "id=${PULL_REQUEST_ID}" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enable Auto Merge
+        if: steps.auto-merge.outputs.enabled == 'false'
+        run: |
+          gh api graphql -f query="
+            mutation {
+              enablePullRequestAutoMerge(
+                input: { pullRequestId: \"${{steps.pull-request.outputs.id}}\" }
+              ) {
+                pullRequest { autoMergeRequest { enabledAt } }
+              }
+            }
+          "
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
