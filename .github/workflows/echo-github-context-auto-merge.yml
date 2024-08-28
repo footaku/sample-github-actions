@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ENABLE_AUTO_MERGE_TOKEN }}
 
       - name: echo merged
         if: github.event.pull_request.merged == true
