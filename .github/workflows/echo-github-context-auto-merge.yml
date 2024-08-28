@@ -3,7 +3,7 @@ name: Echo Auto Merge Context
 on:
   pull_request:
     branches:
-      - main
+      - master
     types: [opened, synchronize, closed]
 
 jobs:
