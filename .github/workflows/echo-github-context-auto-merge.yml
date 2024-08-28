@@ -5,7 +5,6 @@ on:
     branches:
       - master
     types:
-      - auto_merge_enabled
       - closed
 
 jobs:
