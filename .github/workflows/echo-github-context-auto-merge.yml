@@ -6,7 +6,6 @@ on:
       - master
     types:
       - auto_merge_enabled
-      - auto_merge_disabled
       - closed
 
 jobs:
