@@ -54,4 +54,4 @@ jobs:
             }
           "
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.ENABLE_AUTO_MERGE_TOKEN }}
