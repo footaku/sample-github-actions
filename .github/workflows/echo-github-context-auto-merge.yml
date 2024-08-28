@@ -4,7 +4,10 @@ on:
   pull_request:
     branches:
       - master
-    types: [opened, synchronize, closed]
+    types:
+      - auto_merge_enabled
+      - auto_merge_disabled
+      - closed
 
 jobs:
   echo-auto-merge-context:
