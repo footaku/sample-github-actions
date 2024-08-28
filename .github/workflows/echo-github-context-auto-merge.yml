@@ -1,0 +1,33 @@
+name: Echo Auto Merge Context
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, closed]
+
+jobs:
+  echo-auto-merge-context:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: echo merged
+        if: github.event.pull_request.merged == true
+        run: |
+          echo "merge:"
+          echo "${{ github.event.pull_request.auto_merge }}"
+
+      - name: echo auto-merge
+        if: github.event.pull_request.auto_merge != null
+        run: |
+          echo "auto-merge:"
+          echo "${{ github.event.pull_request.auto_merge }}"
+
+      - name: echo either
+        if: github.event.pull_request.merged == true || github.event.pull_request.auto_merge != null
+        run: |
+          echo "either:"
+          echo "${{ github.event.pull_request.auto_merge }}"
