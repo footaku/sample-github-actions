@@ -55,3 +55,6 @@ jobs:
           "
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          TOKENがDefaultだと後続のWorkflowが実行されない
+#          たとえば on.pull_request.types[closed] のWorkflowがあっても
+#          GitHub Actionsがイベント発行者になるのでGitHubの仕様により実行されない
