@@ -1,0 +1,17 @@
+name: echo-repository-name.yml
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 * * * 3"
+
+jobs:
+  echo:
+    name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Echo repository name
+        run: |
+          echo "github.repository: ${{ github.repository }}"
+          echo "github.event.repository.name: ${{ github.event.repository.name }}"
